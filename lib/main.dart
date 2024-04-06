@@ -1,12 +1,19 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wanderlog_admin/controller/auth_controller.dart';
 import 'package:wanderlog_admin/controller/controller.dart';
+import 'package:wanderlog_admin/controller/fire_controller.dart';
+import 'package:wanderlog_admin/firebase_options.dart';
 import 'package:wanderlog_admin/view/home.dart';
 import 'package:wanderlog_admin/view/login.dart';
 import 'package:wanderlog_admin/view/navigation.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -18,7 +25,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthController>(create: (_) => AuthController()),
-        ChangeNotifierProvider<Controller>(create: (_) => Controller())
+        ChangeNotifierProvider<Controller>(create: (_) => Controller()),
+        ChangeNotifierProvider<Firecontroller>(create: (_) => Firecontroller())
       ],
       child: MaterialApp(
           title: 'Flutter Demo',

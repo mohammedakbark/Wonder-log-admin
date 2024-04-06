@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1089703732984",
+    "project_id": "wonderlog",
+    "storage_bucket": "wonderlog.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1089703732984:android:c4b771f582c94a7bd6fd0d",
+        "android_client_info": {
+          "package_name": "com.example.wanderlog"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsKM9YZN1-AWBrilXSvHRVRSBxqcG2hdY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1089703732984:android:80079fe84e877095d6fd0d",
+        "android_client_info": {
+          "package_name": "com.example.wanderlog_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsKM9YZN1-AWBrilXSvHRVRSBxqcG2hdY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

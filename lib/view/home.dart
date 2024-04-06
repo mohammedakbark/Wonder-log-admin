@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:wanderlog_admin/model/new_post.dart';
 import 'package:wanderlog_admin/util/style.dart';
 import 'package:wanderlog_admin/view/singleplacedetailpage.dart';
 import 'package:wanderlog_admin/view/widgets/buttons.dart';
@@ -11,7 +12,12 @@ import 'package:wanderlog_admin/view/navigation.dart';
 class HomeScreen extends StatelessWidget {
   double width;
   double height;
-  HomeScreen({super.key, required this.height, required this.width});
+  List<AddNewPost> list;
+  HomeScreen(
+      {super.key,
+      required this.height,
+      required this.width,
+      required this.list});
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +46,11 @@ class HomeScreen extends StatelessWidget {
                       Container(
                         height: height * .1,
                         width: width * .06,
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                fit: BoxFit.fill,
-                                image: NetworkImage(
-                                    "https://s3-alpha-sig.figma.com/img/9002/a10e/92afc22c4fb716d785abc2f63fd808a6?Expires=1712534400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=YFsvQsggoNN5ZWRR1Zx6RRfJYru4m-B~bq3~3QTSR068ikBjwFLaiDi~OAVhM-qxEwQsaT9P2cjrVY~3ewqFDXqMijtpanjNprUiZUpVx5Bb7kIDgik8sQqg1TfoxAPl9JA~QAcD8Lc0HLVS74imRFFpFyS-5VPRwg8BUYNaRzZJtNO-g~oTTrvxjqB09rmstcpbuj3FSCwkLalhGlfHBXRaPcHQJUuP1a7vOXIlQBpqO~PFS-ok7zjtIbyG0S1k33E1cQF4Zc~6RIFR0TkgkaK9ICyICCsjed~FYqDyj06m1gUmO5xPSPRalVJR48e3NY0AY1jaBxDyoYJ5JTBGTQ__")),
-                            // color: DARK_BLUE_COLOR,
+                        decoration: BoxDecoration(
+                            // image: DecorationImage(
+                            //     fit: BoxFit.fill,
+                            //     image: NetworkImage(list[index]
+                            //         .imageUrl)), // color: DARK_BLUE_COLOR,
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.elliptical(40, 50),
                                 bottomRight: Radius.elliptical(69, 90),
@@ -103,6 +108,6 @@ class HomeScreen extends StatelessWidget {
         separatorBuilder: (context, index) => SizedBox(
               height: height * .1,
             ),
-        itemCount: 10);
+        itemCount: list.length);
   }
 }

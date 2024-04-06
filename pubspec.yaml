@@ -39,6 +39,8 @@ dependencies:
   provider: ^6.1.2
   top_snackbar_flutter: ^3.1.0
   flutter_rating_bar: ^4.0.1
+  firebase_core: ^2.28.0
+  cloud_firestore: ^4.16.0
   
 
 dev_dependencies:

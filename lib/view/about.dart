@@ -15,7 +15,7 @@ class AboutScreen extends StatelessWidget {
       children: [
         SizedBox(
             width: width * .3,
-            child: HomeScreen(height: height * .3, width: width * .3)),
+            child: HomeScreen(height: height * .3, width: width * .3,list: [],)),
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
