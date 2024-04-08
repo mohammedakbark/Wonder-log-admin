@@ -1,13 +1,20 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:wanderlog_admin/controller/fire_controller.dart';
+import 'package:wanderlog_admin/model/new_post.dart';
 import 'package:wanderlog_admin/util/colors.dart';
 import 'package:wanderlog_admin/util/style.dart';
 import 'package:wanderlog_admin/view/home.dart';
 import 'package:wanderlog_admin/view/widgets/buttons.dart';
+import 'package:wanderlog_admin/view/widgets/popupnotification.dart';
 
 class NotificationScreen extends StatelessWidget {
-  const NotificationScreen({super.key});
+  List<AddNewPost> post;
+  NotificationScreen({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +25,11 @@ class NotificationScreen extends StatelessWidget {
       children: [
         SizedBox(
             width: width * .3,
-            child: HomeScreen(height: height * .3, width: width * .3,list: [],)),
+            child: HomeScreen(
+              height: height * .3,
+              width: width * .3,
+              post: post,
+            )),
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -29,58 +40,141 @@ class NotificationScreen extends StatelessWidget {
             SizedBox(
               height: height * .05,
             ),
-            Expanded(
-              child: SizedBox(
-                width: width * .4,
-                // height: height * .7,
-                child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                          leading: Container(
-                            height: height * .1,
-                            width: width * .04,
-                            decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: NetworkImage(
-                                        "https://s3-alpha-sig.figma.com/img/9002/a10e/92afc22c4fb716d785abc2f63fd808a6?Expires=1712534400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=YFsvQsggoNN5ZWRR1Zx6RRfJYru4m-B~bq3~3QTSR068ikBjwFLaiDi~OAVhM-qxEwQsaT9P2cjrVY~3ewqFDXqMijtpanjNprUiZUpVx5Bb7kIDgik8sQqg1TfoxAPl9JA~QAcD8Lc0HLVS74imRFFpFyS-5VPRwg8BUYNaRzZJtNO-g~oTTrvxjqB09rmstcpbuj3FSCwkLalhGlfHBXRaPcHQJUuP1a7vOXIlQBpqO~PFS-ok7zjtIbyG0S1k33E1cQF4Zc~6RIFR0TkgkaK9ICyICCsjed~FYqDyj06m1gUmO5xPSPRalVJR48e3NY0AY1jaBxDyoYJ5JTBGTQ__")),
-                                // color: DARK_BLUE_COLOR,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.elliptical(40, 50),
-                                    bottomRight: Radius.elliptical(69, 90),
-                                    topRight: Radius.elliptical(60, 30),
-                                    bottomLeft: Radius.elliptical(60, 50))),
-                          ),
-                        title: Text(
-                          "is uploaded new place",
-                          style: normalStyle(),
-                        ),
-                        subtitle: Row(
-                          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            button("Reject", Color.fromARGB(255, 180, 19, 7),
-                                () {}),
-                            SizedBox(
-                              width: width * .01,
-                            ),
-                            button("Accept",
-                                const Color.fromARGB(255, 21, 169, 26), () {}),
-                          ],
+            Consumer<Firecontroller>(builder: (context, fireController, child) {
+              return FutureBuilder(
+                  future: fireController.fetchPendingRequest(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: Text(
+                          "Loading...",
+                          style: poppinStyle(letterSpacing: 1, fontsize: 33),
                         ),
                       );
-                      // return Container(
-                      //   color: Colors.green,
-                      //   width: width,
-                      //   height: height * .1,
+                    }
+                    final request = fireController.pendingRequest;
+                    return Expanded(
+                      child: SizedBox(
+                        width: width * .4,
+                        // height: height * .7,
+                        child: ListView.separated(
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                leading: MouseRegion(
+                                  onExit: (event) {},
+                                  // onEnter: (event) {
+                                  //   Navigator.of(context).pop();
+                                  // },
+                                  onHover: (event) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          content: Image.network(
+                                            request[index].imageUrl,
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Container(
+                                    height: height * .1,
+                                    width: width * .04,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          fit: BoxFit.fill,
+                                          image: NetworkImage(
+                                            request[index].imageUrl,
+                                          ),
+                                        ), // color: DARK_BLUE_COLOR,
+                                        borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.elliptical(40, 50),
+                                            bottomRight:
+                                                Radius.elliptical(69, 90),
+                                            topRight: Radius.elliptical(60, 30),
+                                            bottomLeft:
+                                                Radius.elliptical(60, 50))),
+                                  ),
+                                ),
+                                title: FutureBuilder(
+                                    future:
+                                        fireController.fetchSelectedUserDetail(
+                                            request[index].uid),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Text("");
+                                      }
+                                      return RichText(
+                                          text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                              text: fireController
+                                                  .selectedUserData!.name,
+                                              style: normalStyle(
+                                                  letterSpacing: 1,
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text: " is uploaded new place",
+                                              style: normalStyle(
+                                                  color: Colors.grey.shade400))
+                                        ],
+                                      ));
+                                    }),
+                                subtitle: Row(
+                                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    button("Reject",
+                                        const Color.fromARGB(255, 180, 19, 7),
+                                        () {
+                                      showconfirmation(
+                                          context,
+                                          "Make sure rejecting this post.Once the post  rejected,never can retrieve this post again ",
+                                          "Reject",
+                                          "Cancel", () {
+                                        fireController.updateTheRequestStatus(
+                                            request[index].placeId, "Rejected");
+                                        Navigator.of(context).pop();
+                                      }, () {
+                                        Navigator.of(context).pop();
+                                      });
+                                    }),
+                                    SizedBox(
+                                      width: width * .01,
+                                    ),
+                                    button("Accept",
+                                        const Color.fromARGB(255, 21, 169, 26),
+                                        () {
+                                      showconfirmation(
+                                          context,
+                                          "Make sure,before accepting request,this post is not encouraging eny violation",
+                                          "Confirm",
+                                          "Cancel", () {
+                                        fireController.updateTheRequestStatus(
+                                            request[index].placeId, "Approved");
+                                        Navigator.of(context).pop();
+                                      }, () {
+                                        Navigator.of(context).pop();
+                                      });
+                                    }),
+                                  ],
+                                ),
+                              );
+                              // return Container(
+                              //   color: Colors.green,
+                              //   width: width,
+                              //   height: height * .1,
 
-                      // );
-                    },
-                    separatorBuilder: (context, index) => SizedBox(
-                          height: height * .06,
-                        ),
-                    itemCount: 10),
-              ),
-            )
+                              // );
+                            },
+                            separatorBuilder: (context, index) => SizedBox(
+                                  height: height * .06,
+                                ),
+                            itemCount: request.length),
+                      ),
+                    );
+                  });
+            })
           ],
         )
       ],

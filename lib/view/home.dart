@@ -1,23 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:wanderlog_admin/controller/fire_controller.dart';
 import 'package:wanderlog_admin/model/new_post.dart';
+import 'package:wanderlog_admin/util/colors.dart';
 import 'package:wanderlog_admin/util/style.dart';
 import 'package:wanderlog_admin/view/singleplacedetailpage.dart';
 import 'package:wanderlog_admin/view/widgets/buttons.dart';
-import 'package:wanderlog_admin/view/widgets/padding.dart';
 import 'package:wanderlog_admin/view/widgets/ratingbar.dart';
-import 'package:wanderlog_admin/view/navigation.dart';
 
 class HomeScreen extends StatelessWidget {
   double width;
   double height;
-  List<AddNewPost> list;
+  List<AddNewPost> post;
   HomeScreen(
       {super.key,
       required this.height,
       required this.width,
-      required this.list});
+      required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -37,51 +36,68 @@ class HomeScreen extends StatelessWidget {
                   width: width,
                   height: height,
                   decoration: BoxDecoration(
-                      color: Colors.red,
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: NetworkImage(post[index].imageUrl)),
+                      color: GREY,
                       borderRadius: BorderRadius.circular(20)),
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: height * .1,
-                        width: width * .06,
-                        decoration: BoxDecoration(
-                            // image: DecorationImage(
-                            //     fit: BoxFit.fill,
-                            //     image: NetworkImage(list[index]
-                            //         .imageUrl)), // color: DARK_BLUE_COLOR,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.elliptical(40, 50),
-                                bottomRight: Radius.elliptical(69, 90),
-                                topRight: Radius.elliptical(60, 30),
-                                bottomLeft: Radius.elliptical(60, 50))),
-                      ),
-                      Text(
-                        "Lakshmi",
-                        style: nunitoStyle(
-                            fontsize: 12, fontWeight: FontWeight.w600),
-                      )
-                    ],
-                  ),
+                  child: Consumer<Firecontroller>(
+                      builder: (context, fireController, child) {
+                    return FutureBuilder(
+                        future: fireController
+                            .fetchSelectedUserDetail(post[index].uid),
+                        builder: (context, snapShot) {
+                          if (snapShot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const SizedBox();
+                          }
+                          final user = fireController.selectedUserData;
+                          return Column(
+                            // mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: height * .1,
+                                width: width * .06,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: NetworkImage(user!
+                                            .imageUrl)), // color: DARK_BLUE_COLOR,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.elliptical(40, 50),
+                                        bottomRight: Radius.elliptical(69, 90),
+                                        topRight: Radius.elliptical(60, 30),
+                                        bottomLeft: Radius.elliptical(60, 50))),
+                              ),
+                              Text(
+                                user.name,
+                                style: nunitoStyle(
+                                    fontsize: 12, fontWeight: FontWeight.w600),
+                              )
+                            ],
+                          );
+                        });
+                  }),
                 ),
                 SizedBox(
                   width: width,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Rome,Italy",
+                            post[index].placeName,
                             style: poppinStyle(
                                 fontWeight: FontWeight.w500, fontsize: 26),
                           ),
-                          constRatingBar(4, itemSize: 30)
+                          constRatingBar(post[index].rating, itemSize: 30)
                         ],
                       ),
-                      const Text(
-                        "Lorem ipsum dolor sit amet, consectetuer adipiscing elit,sed diam nonummy nibh euismod tincidunt ut laoreetdolore magna aliquam erat volutpat. Ut wisi enimad minim veniam,Lorem ipsum dolor sit amet, consectetuer adipiscing elit,sed diam nonummy nibh euismod tincidunt ut laoreetdolore magna aliquam erat volutpat. Ut wisi enimad minim veniam,  ",
+                      Text(
+                        post[index].placeDescription,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -94,8 +110,9 @@ class HomeScreen extends StatelessWidget {
                               width: width * .034,
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      const SingleDetailPage(),
+                                  builder: (context) => SingleDetailPage(
+                                    addNewPost: post[index],
+                                  ),
                                 ));
                               })),
                     ],
@@ -108,6 +125,6 @@ class HomeScreen extends StatelessWidget {
         separatorBuilder: (context, index) => SizedBox(
               height: height * .1,
             ),
-        itemCount: list.length);
+        itemCount: post.length);
   }
 }

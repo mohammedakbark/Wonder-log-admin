@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:wanderlog_admin/model/new_post.dart';
 import 'package:wanderlog_admin/util/style.dart';
 import 'package:wanderlog_admin/view/home.dart';
 import 'package:wanderlog_admin/view/widgets/buttons.dart';
 
 class AboutScreen extends StatelessWidget {
-  const AboutScreen({super.key});
+  List<AddNewPost> post;
+  AboutScreen({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +17,16 @@ class AboutScreen extends StatelessWidget {
       children: [
         SizedBox(
             width: width * .3,
-            child: HomeScreen(height: height * .3, width: width * .3,list: [],)),
+            child: HomeScreen(
+              height: height * .3,
+              width: width * .3,
+              post: post,
+            )),
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             text(
-              title: "NOTIFICATION",
+              title: "ABOUT",
               fontsize: 29,
             ),
             SizedBox(

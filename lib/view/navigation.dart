@@ -47,6 +47,7 @@ class _NavigationPageState extends State<NavigationPage>
     final width = MediaQuery.of(context).size.width;
     final controller = Provider.of<Controller>(context);
     return Scaffold(
+      
       body: Consumer<Firecontroller>(builder: (context, fireController, child) {
         return FutureBuilder(
             future: fireController.fetchApprovedPost(),
@@ -54,12 +55,13 @@ class _NavigationPageState extends State<NavigationPage>
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                   child: Text(
-                    "No Data",
-                    style: poppinStyle(letterSpacing: 1),
+                    "Loading...",
+                    style: poppinStyle(letterSpacing: 1, fontsize: 33),
                   ),
                 );
               }
               final data = fireController.listOfPost;
+
               return data.isEmpty
                   ? Center(
                       child: Text(
@@ -146,13 +148,17 @@ class _NavigationPageState extends State<NavigationPage>
                             Expanded(
                                 child: TabBarView(children: [
                               HomeScreen(
-                                list: data,
+                                post: data,
                                 height: height * .7,
                                 width: width * .7,
                               ),
-                              NotificationScreen(),
-                              UsersScreen(),
-                              AboutScreen()
+                              NotificationScreen(
+                                post: data,
+                              ),
+                              UsersScreen(
+                                post: data,
+                              ),
+                              AboutScreen(post: data)
                             ]))
                           ],
                         ),

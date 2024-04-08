@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:wanderlog_admin/controller/controller.dart';
+import 'package:wanderlog_admin/model/new_post.dart';
 import 'package:wanderlog_admin/util/colors.dart';
 import 'package:wanderlog_admin/util/style.dart';
 import 'package:wanderlog_admin/view/widgets/buttons.dart';
 import 'package:wanderlog_admin/view/widgets/ratingbar.dart';
 
 class SingleDetailPage extends StatefulWidget {
-  const SingleDetailPage({super.key});
+  AddNewPost addNewPost;
+  SingleDetailPage({super.key, required this.addNewPost});
 
   @override
   State<SingleDetailPage> createState() => _SingleDetailPageState();
@@ -71,6 +73,10 @@ class _SingleDetailPageState extends State<SingleDetailPage>
                           width: width * .3,
                           height: height * .3,
                           decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image:
+                                      NetworkImage(widget.addNewPost.imageUrl)),
                               color: Colors.red,
                               borderRadius: BorderRadius.circular(20)),
                           child: Column(
@@ -95,11 +101,12 @@ class _SingleDetailPageState extends State<SingleDetailPage>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Rome,Italy",
+                              widget.addNewPost.placeName,
                               style: poppinStyle(
                                   fontWeight: FontWeight.w500, fontsize: 26),
                             ),
-                            constRatingBar(4, itemSize: 30)
+                            constRatingBar(widget.addNewPost.rating,
+                                itemSize: 30)
                           ],
                         ),
                       ],
@@ -114,7 +121,7 @@ class _SingleDetailPageState extends State<SingleDetailPage>
                           // height: height * .7,
                           child: SingleChildScrollView(
                             child: Text(
-                              " Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreetdolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam,   Lorem ipsum dolor sit amet, con Lorem ipsum dolor sit amet, consectetuer adipiscing elit,sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enimad minim veniam,   Lorem ipsum dolor sit amet, con Lorem ipsum dolor sit amet, consectetuer adipiscing elit,sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enimad minim veniam,   Lorem ipsum dolor sit amet, conLorem ipsum dolor sit amet, consectetuer adipiscing elit,sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam,   Lorem ipsum dolor sit amet, conLorem ipsum dolor sit amet, consectetuer adipiscing elit,sed diam nonummy nibh euismod tincidunt ut laoreetdolore magna aliquam erat volutpat. Ut wisi enimad minim veniam,   Lorem ipsum dolor sit amet, conLorem ipsum dolor sit amet, consectetuer adipiscing elit,sed diam nonummy nibh euismod tincidunt ut laoreetdolore magna aliquam erat volutpat. Ut wisi enimad minim veniam,   Lorem ipsum dolor sit amet, con Lorem i",
+                              widget.addNewPost.placeDescription,
                               style: poppinStyle(fontsize: 18),
                             ),
                           ),
