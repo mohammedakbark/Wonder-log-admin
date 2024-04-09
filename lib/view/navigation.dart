@@ -47,7 +47,6 @@ class _NavigationPageState extends State<NavigationPage>
     final width = MediaQuery.of(context).size.width;
     final controller = Provider.of<Controller>(context);
     return Scaffold(
-      
       body: Consumer<Firecontroller>(builder: (context, fireController, child) {
         return FutureBuilder(
             future: fireController.fetchApprovedPost(),
@@ -62,108 +61,100 @@ class _NavigationPageState extends State<NavigationPage>
               }
               final data = fireController.listOfPost;
 
-              return data.isEmpty
-                  ? Center(
-                      child: Text(
-                        "No Data",
-                        style: poppinStyle(letterSpacing: 1),
+              return CustomePadding(
+                child: DefaultTabController(
+                  // animationDuration: Duration(microseconds: 100),
+                  length: 4,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                          width: width,
+                          height: 70,
+                          // color: Colors.red,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            // crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Expanded(
+                                child: FadeTransition(
+                                  opacity: _animation,
+                                  child: TabBar(
+                                      overlayColor:
+                                          const MaterialStatePropertyAll(
+                                              Colors.transparent),
+                                      indicatorColor: DARK_BLUE_COLOR,
+                                      dividerColor: Colors.transparent,
+                                      tabs: [
+                                        Tab(
+                                          child: text(title: "HOME"),
+                                        ),
+                                        Tab(
+                                          child: text(title: "NOTIFICATION"),
+                                        ),
+                                        Tab(
+                                          child: text(title: "USERS"),
+                                        ),
+                                        Tab(
+                                          child: text(title: "ABOUT"),
+                                        )
+                                      ]),
+                                ),
+                              ),
+                              // Expanded(
+                              //   child: FadeTransition(
+                              //     opacity: _animation,
+                              //     child: Padding(
+                              //       padding: const EdgeInsets.only(left: 100, right: 100),
+                              //       child: Row(
+                              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //         children: [
+                              //           textButton(onPressed: () {}, title: "HOME"),
+                              //           textButton(onPressed: () {}, title: "NOTIFICATION"),
+                              //           textButton(onPressed: () {}, title: "USERS"),
+                              //           textButton(onPressed: () {}, title: "ABOUT")
+                              //         ],
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
+                              IconButton(
+                                  onPressed: () {
+                                    controller.isButtonClicked();
+                                    if (controller.isVisible) {
+                                      _controller.forward();
+                                    } else {
+                                      _controller.reverse();
+                                    }
+                                  },
+                                  icon: const Icon(
+                                    Icons.sort_sharp,
+                                    color: DARK_BLUE_COLOR,
+                                    size: 33,
+                                  )),
+                            ],
+                          )),
+                      SizedBox(
+                        height: height * .1,
                       ),
-                    )
-                  : CustomePadding(
-                      child: DefaultTabController(
-                        // animationDuration: Duration(microseconds: 100),
-                        length: 4,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                                width: width,
-                                height: 70,
-                                // color: Colors.red,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  // crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Expanded(
-                                      child: FadeTransition(
-                                        opacity: _animation,
-                                        child: TabBar(
-                                            overlayColor:
-                                                const MaterialStatePropertyAll(
-                                                    Colors.transparent),
-                                            indicatorColor: DARK_BLUE_COLOR,
-                                            dividerColor: Colors.transparent,
-                                            tabs: [
-                                              Tab(
-                                                child: text(title: "HOME"),
-                                              ),
-                                              Tab(
-                                                child:
-                                                    text(title: "NOTIFICATION"),
-                                              ),
-                                              Tab(
-                                                child: text(title: "USERS"),
-                                              ),
-                                              Tab(
-                                                child: text(title: "ABOUT"),
-                                              )
-                                            ]),
-                                      ),
-                                    ),
-                                    // Expanded(
-                                    //   child: FadeTransition(
-                                    //     opacity: _animation,
-                                    //     child: Padding(
-                                    //       padding: const EdgeInsets.only(left: 100, right: 100),
-                                    //       child: Row(
-                                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    //         children: [
-                                    //           textButton(onPressed: () {}, title: "HOME"),
-                                    //           textButton(onPressed: () {}, title: "NOTIFICATION"),
-                                    //           textButton(onPressed: () {}, title: "USERS"),
-                                    //           textButton(onPressed: () {}, title: "ABOUT")
-                                    //         ],
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // ),
-                                    IconButton(
-                                        onPressed: () {
-                                          controller.isButtonClicked();
-                                          if (controller.isVisible) {
-                                            _controller.forward();
-                                          } else {
-                                            _controller.reverse();
-                                          }
-                                        },
-                                        icon: const Icon(
-                                          Icons.sort_sharp,
-                                          color: DARK_BLUE_COLOR,
-                                          size: 33,
-                                        )),
-                                  ],
-                                )),
-                            SizedBox(
-                              height: height * .1,
-                            ),
-                            Expanded(
-                                child: TabBarView(children: [
-                              HomeScreen(
+                      Expanded(
+                          child: TabBarView(children: [
+                       HomeScreen(
                                 post: data,
                                 height: height * .7,
                                 width: width * .7,
                               ),
-                              NotificationScreen(
-                                post: data,
-                              ),
-                              UsersScreen(
-                                post: data,
-                              ),
-                              AboutScreen(post: data)
-                            ]))
-                          ],
+                        NotificationScreen(
+                          post: data,
                         ),
-                      ),
-                    );
+                        UsersScreen(
+                          post: data,
+                        ),
+                        AboutScreen(post: data)
+                      ]))
+                    ],
+                  ),
+                ),
+              );
             });
       }),
     );

@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:js_interop_unsafe';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:wanderlog_admin/model/new_post.dart';
@@ -10,12 +13,23 @@ class Firecontroller with ChangeNotifier {
 
   //----------------------delete
   Future deleteuserData(uid) async {
-    await db.collection("User").doc(uid).delete();
+    _deleteDeletedUserData(uid).then((value) {
+      db.collection("User").doc(uid).delete();
+    });
+
     notifyListeners();
   }
 
   _deleteRejectedPost(docId) {
     db.collection("Post").doc(docId).delete();
+  }
+
+  Future _deleteDeletedUserData(uid) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await db.collection("Post").where("uid", isEqualTo: uid).get();
+    for (var i in snapshot.docs) {
+      _deleteRejectedPost(i["placeId"]);
+    }
   }
 
   //--------------------update

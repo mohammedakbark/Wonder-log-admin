@@ -23,13 +23,20 @@ class NotificationScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        SizedBox(
-            width: width * .3,
-            child: HomeScreen(
-              height: height * .3,
-              width: width * .3,
-              post: post,
-            )),
+        post.isEmpty
+            ? Center(
+                child: Text(
+                  "No Data",
+                  style: poppinStyle(letterSpacing: 1),
+                ),
+              )
+            : SizedBox(
+                width: width * .3,
+                child: HomeScreen(
+                  height: height * .3,
+                  width: width * .3,
+                  post: post,
+                )),
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
